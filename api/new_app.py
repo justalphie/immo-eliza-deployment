@@ -52,7 +52,7 @@ def predict(item: Item):
     df = clean_dataset(df)
     X_test = df.iloc[:, 1:]
     X_train, X_test = apply_preprocessings(preprocessings, X_train=None, X_test=X_test)
-    y_pred = ridge.predict(X_test)
+    y_pred = round(ridge.predict(X_test), 2)
     y_pred_df = pd.DataFrame(y_pred, index=X_test.index, columns=["price_pred"])
     output_dict = list(y_pred_df.to_dict(orient='index').values())[0]
     return output_dict
