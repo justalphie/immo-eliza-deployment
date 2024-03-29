@@ -44,10 +44,22 @@ app = FastAPI()
 
 @app.get("/")
 def new():
+    """
+    This function returns the string "alive", when the API root is requested.
+    """
     return "alive"
 
 @app.post("/predict/")
 def predict(item: Item):
+    """
+    Predicts the price of an apartment using a trained model.
+
+    Parameters:
+        item (Item): An instance of the Item class containing the item's features.
+
+    Returns:
+        dict: A dictionary containing the predicted price of the item.
+    """
     df = pd.DataFrame([item.dict().values()], columns=item.dict().keys())
     df = clean_dataset(df)
     X_test = df.iloc[:, 1:]
@@ -56,6 +68,5 @@ def predict(item: Item):
     y_pred_df = pd.DataFrame(y_pred, index=X_test.index, columns=["Price prediction, €: "])
     output_dict = list(y_pred_df.to_dict(orient='index').values())[0]
     output_dict["Price prediction, €: "] = round(output_dict["Price prediction, €: "], 2)
-    # TODO output_dict["Status"] = how to print out status??
     return output_dict
     

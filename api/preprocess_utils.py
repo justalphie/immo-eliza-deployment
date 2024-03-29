@@ -3,13 +3,27 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler, KBinsDiscretizer
 
 def remove_rare_sale_types(df):
+    """
+    Removes rows from the DataFrame that have rare sale types.
+    """
     index_type_of_sale = df[(df["type_of_sale"] == "PUBLIC_SALE")| (df["type_of_sale"] == "LIFE_ANNUITY")].index
     df.drop(index_type_of_sale, inplace=True)
 
 def replace_incorrect_kitchen(df):
-    df.replace({"kitchen_type":"USA_UNINSTALLED"}, 'USA_HYPER_EQUIPPED', inplace=True)
+    """
+    Replaces the incorrect kitchen type 'USA_UNINSTALLED' with 'USA_HYPER_EQUIPPED' in the given DataFrame.
+    """
+    df.replace({"kitchen_type": "USA_UNINSTALLED"}, 'USA_HYPER_EQUIPPED', inplace=True)
+
 
 def clean_dataset(df):
+    """
+    Cleans the given dataset by performing the following operations:
+    1. Sets the 'property_id' column as the index of the DataFrame.
+    2. Removes rare sale types from the DataFrame.
+    3. Replaces incorrect kitchen values in the DataFrame.
+    4. Selects specific columns from the DataFrame.
+    """
     df.set_index('property_id', inplace=True)
     remove_rare_sale_types(df)
     replace_incorrect_kitchen(df)
@@ -17,10 +31,22 @@ def clean_dataset(df):
     return df
 
 def concat_latlon(lat, lon):
+    """
+    turns latitude and longitude as 
+    """
     return str(int(lat))+"x"+str(int(lon))
 
-# TODO
+  
 def get_initial_preprocessings():
+    """
+    Returns a dictionary containing the initial preprocessing steps for the dataset.
+    The dictionary contains the following keys:
+    - "imputations": A dictionary of SimpleImputer objects for handling missing values.
+    - "encodings": A dictionary of OneHotEncoder objects for encoding categorical features.
+    - "normalizations": A dictionary of scaler objects for normalizing numerical features.
+    - "binnings": A dictionary of KBinsDiscretizer objects for binning features.
+    - "encoding_latlon": A dictionary of OneHotEncoder objects for encoding latitude and longitude.
+    """
     return {
 
         "imputations": {
@@ -70,7 +96,15 @@ def get_initial_preprocessings():
         
     }
 
+
+
 def apply_preprocessings(preprocessings, X_train=None, X_test=None):
+    """
+    Applies a series of preprocessing steps to the train and test datasets.
+    Returns:
+    - X_train (pandas DataFrame): The updated training dataset after applying the preprocessing steps.
+    - X_test (pandas DataFrame): The updated test dataset after applying the preprocessing steps.
+    """
     # Apply the imputation on the train and test datasets
     for column_to_impute, imputer in preprocessings['imputations'].items():
         if X_train is not None:
@@ -115,14 +149,14 @@ def apply_preprocessings(preprocessings, X_train=None, X_test=None):
                 result = discretizer.transform(X_test[[column_to_bin]])
                 transformed_X_test_df = pd.DataFrame(result, index=X_test.index, columns=[column_to_bin])
                 X_test[[column_to_bin]] = transformed_X_test_df 
-    #adding the latitude+longitude column
+    #add the latitude+longitude column
     if X_train is not None:
         X_train["latlon"] = X_train.apply(lambda row: concat_latlon(row["latitude"], row["longitude"]), axis=1)
         X_train.drop(["latitude","longitude"], axis=1, inplace=True)
     if X_test is not None:
         X_test["latlon"] = X_test.apply(lambda row: concat_latlon(row["latitude"], row["longitude"]), axis=1)
         X_test.drop(["latitude", "longitude"], axis=1, inplace=True)
-    #Encoding the latlon column with OneHotEncoder
+    #Encode the latlon column with OneHotEncoder
     for column_to_encode, encoder in preprocessings["encoding_latlon"].items():
         if X_train is not None:
             # fit_transform X_train
@@ -130,12 +164,11 @@ def apply_preprocessings(preprocessings, X_train=None, X_test=None):
             transformed_X_train_df = pd.DataFrame(transformed_X_train, index=X_train.index, columns=encoder.get_feature_names_out())
             X_train = pd.concat([X_train, transformed_X_train_df], axis=1).drop([column_to_encode], axis=1)
         if X_test is not None:
-            # transform X_test
+            # only transform X_test
             transformed_X_test = encoder.transform(X_test[[column_to_encode]])
             transformed_X_test_df = pd.DataFrame(transformed_X_test, index=X_test.index, columns=encoder.get_feature_names_out())
             X_test = pd.concat([X_test, transformed_X_test_df], axis=1).drop([column_to_encode], axis=1)
         #new preprocessing step: multiply columns with living_area
-        #(because these columns change the price per square meter)
         if X_train is not None:
             for column in X_train.columns:
                 if "postal_code" in column or "latlon" in column or "property_subtype" in column or "state_of_building" in column:
