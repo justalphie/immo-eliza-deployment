@@ -1,4 +1,4 @@
-# The immo-eliza-ml machine learning project
+# The immo-eliza-deployment machine learning project and API
 
 ## Project description
 
