@@ -2,7 +2,7 @@
 
 ## Project description
 
-<img align="right" height="200" src="[https://assets.everspringpartners.com/dims4/default/5c1df5b/2147483647/strip/true/crop/1400x800+0+0/resize/1600x914!/format/webp/quality/90/?url=http%3A%2F%2Feverspring-brightspot.s3.us-east-1.amazonaws.com%2Ffe%2F06%2Ff23661be455e97d009c6ae418995%2Freal-estate-finance.jpg](https://www.alxnow.com/files/2021/09/Ask-McEnearney_09-08-21-graphic1.jpg)" />
+<img align="right" height="200" src="https://www.alxnow.com/files/2021/09/Ask-McEnearney_09-08-21-graphic1.jpg" />
 
 Real estate business needs fast and efficient tools to take advantageous decisions. Automatic price estimator is a handy tool that can boost the work productivity of real estate projects and navigate the clients in the sea of real estate offers. 
 
