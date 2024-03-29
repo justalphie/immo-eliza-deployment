@@ -9,9 +9,13 @@ Real estate business needs fast and efficient tools to take advantageous decisio
 The immo-eliza-ml program is an example of such a tool. With the help of such features as location and living area of the apartment of the house it can rapidly predict the price of the property. 
 
 ## Usage
-To use the API please access https://immo-eliza-deployment-latest.onrender.com/
+To use the API please access https://immo-eliza-deployment-latest.onrender.com/ 
+
+### Price estimation
 Use ```/predict``` path to get the price estimations.
-To do this, please send the post request in the following format:
+
+### Input
+To obtain the estimation, please send the post request in the following format:
 ```
 {
   "property_id": 999999999,
@@ -43,9 +47,13 @@ To do this, please send the post request in the following format:
   "province": "brussel"
 }
 ```
-
-
-
+### Output
+You will receive your estimation in the following format:
+```
+{
+    "Price prediction, €: ": 593261.85
+}
+```
 
 ## Project timeline
 The project was carried out within the framework of Data&AI training by [BeCode](https://becode.org/) within 5 days.
